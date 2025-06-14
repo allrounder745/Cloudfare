@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Toxify×Allrounder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0a0a0a;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 60px;
+    }
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(6px);
+  }
+
+  .popup-box {
+    width: 320px;
+    background: rgba(20, 20, 30, 0.6);
+    border: 1px solid rgba(173, 216, 230, 0.25);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.4), 0 0 80px rgba(173, 216, 230, 0.15);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    animation: fadeIn 0.5s ease forwards;
+    position: relative;
+  }
+
+  @keyframes fadeIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .popup-header {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #00eaff, #bd00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.4rem;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  }
+
+  .popup-subtitle {
+    font-size: 1rem;
+    color: #aaa;
+    margin-bottom: 1.2rem;
+  }
+
+  .popup-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .popup-btn {
+    padding: 0.8rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .popup-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(0,255,255,0.3), rgba(255,0,255,0.2));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .popup-btn:hover::after {
+    opacity: 1;
+  }
+
+  .join-btn {
+    background: linear-gradient(135deg, #00eaff, #9c00ff);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+  }
+  .join-btn:hover {
+    background: linear-gradient(135deg, #00ffff, #c000ff);
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.6);
+  }
+
+  .already-btn {
+    background: rgba(255,255,255,0.05);
+  }
+  .already-btn:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 1.3rem;
+    color: #00eaff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  .close-btn:hover {
+    color: #ff00cc;
+  }
+    .tabs {
+      display: flex;
+      background: #111;
+      border-top: 1px solid #222;
+      width: 100vw;
+    }
+    .tab {
+      flex: 1;
+      padding: 15px 0;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 18px;
+      color: #ccc;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .tab.active {
+      color: #fff;
+      border-bottom: 3px solid #1db954;
+      background-color: #222;
+    }
+    .tab-content {
+      display: none;
+      background: #111;
+      width: 100vw;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    iframe {
+      width: 100vw;
+      height: 500px;
+      border: none;
+      display: block;
+    }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: #111;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #1db954;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 12px;
+  color: #fff;
+}
+
+.close-btn {
+  color: #fff;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.iframe-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  background: black;
+}
+
+.iframe-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.close-btn:hover {
+  color: #1db954;
+}
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      padding: 0.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1000;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    header img {
+      max-width: 150px;
+      height: auto;
+      pointer-events: none;
+    }
+    #player-container {
+      width: 100vw;
+      margin: 0;
+    }
+    video#player {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: black;
+      border-radius: 0;
+      box-shadow: none;
+      display: block;
+    }
+    #menu-toggle {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 18px;
+    }
+    #menu-toggle span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    #menu-toggle.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    #menu-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+    #menu-toggle.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    #menu-dropdown {
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      background: rgba(20, 20, 20, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      width: 240px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    #menu-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    #menu-dropdown ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #menu-dropdown ul li {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    #menu-dropdown ul li:last-child {
+      border-bottom: none;
+    }
+    #menu-dropdown ul li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      color: #eee;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.3s, color 0.3s;
+    }
+    #menu-dropdown ul li a:hover {
+      background: #1db954;
+      color: #fff;
+    }
+    #menu-dropdown ul li a i {
+      width: 20px;
+      text-align: center;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      text-align: center;
+      padding: 2rem;
+      width: 100%;
+      min-height: 500px;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <div id="menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <img src="https://i.ibb.co/rKDCBvph/Picsart-25-06-10-00-08-54-780.png" alt="Logo" />
+    <div id="menu-dropdown">
+      <ul>
+        <li><a href="https://t.me/+bBTRZuMcxZ0wNGM1" target="_blank"><i class="fab fa-telegram"></i> Join Telegram</a></li>
+<li><a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+<li><a href="https://t.me/+bBTRZuMcxZ0wNGM1" target="_blank"><i class="fas fa-envelope"></i> Contact</a></li>
+<li><a href="t.me/Jkiootu" target="_blank"><i class="fas fa-globe"></i> Make Your Web</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div id="player-container">
+    <div class="iframe-wrapper">
+  <iframe src="https://crxcshivamm45.github.io/Willow-Cricket-j/" allowfullscreen></iframe>
+</div>
+
+  </div>
+<div id="privacyModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>Privacy Policy</h2>
+    <p>This is your Privacy Policy content. You can write or paste your complete privacy terms here. Example:</p>
+    <p>We respect your privacy. We do not collect personal data or track your activities on this website. External services like Telegram may have their own privacy policies.</p>
+  </div>
+</div>
+
+  <div class="tabs">
+    <div class="tab active" id="tabChat">Live Chat</div>
+    <div class="tab" id="tabScoreboard">Scoreboard</div>
+  </div>
+
+  <div class="tab-content active" id="chatSection">
+    <iframe src="https://allrounder745.github.io/Live-Chat-System-/" title="Live Chat"></iframe>
+  </div>
+<div class="popup-overlay" id="supportPopup">
+  <div class="popup-box">
+    <button class="close-btn" onclick="closePopup()">×</button>
+    <div class="popup-header">Support Us!</div>
+    <div class="popup-subtitle">Join our Telegram channel</div>
+    <div class="popup-buttons">
+      <button class="popup-btn join-btn" onclick="window.open('https://t.me/+ig6RY3vGe7A4MzNl', '_blank')">Join Now</button>
+      <button class="popup-btn already-btn" onclick="closePopup()">Already Joined</button>
+    </div>
+  </div>
+</div>
+
+  <div class="tab-content" id="scoreboardSection">
+    <iframe src="https://allrounderscoreboard.onrender.com/" title="Scoreboard Widget"></iframe>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+  <script>
+    const jsonUrl = 'https://raw.githubusercontent.com/StmpupCricket/Star-Sports-Hindi-json/refs/heads/main/data.json';
+    fetch(jsonUrl)
+      .then(response => response.json())
+      .then(data => {
+        const m3u8Url = data.stream_url;
+        const video = document.getElementById('player');
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(m3u8Url);
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            const availableQualities = hls.levels
+              .map(level => level.height)
+              .filter((v, i, a) => a.indexOf(v) === i)
+              .sort((a, b) => b - a);
+            const player = new Plyr(video, {
+              controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+              settings: ['quality', 'speed'],
+              speed: { selected: 1, options: [0.75, 1, 1.25] },
+              quality: {
+                default: availableQualities[0],
+                options: availableQualities,
+                forced: true,
+                onChange: e => {
+                  const levelIndex = hls.levels.findIndex(l => l.height === e);
+                  hls.currentLevel = levelIndex;
+                }
+              }
+            });
+            video.play();
+          });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = m3u8Url;
+          video.addEventListener('loadedmetadata', () => {
+            new Plyr(video, {
+              controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+              settings: ['quality', 'speed'],
+              speed: { selected: 1, options: [0.75, 1, 1.25] }
+            });
+            video.play();
+          });
+        } else {
+          alert("Your browser does not support HLS.");
+        }
+      })
+      .catch(err => {
+        console.error('Failed to load stream URL from JSON:', err);
+        alert('Failed to load stream.');
+      });
+
+    const tabChat = document.getElementById('tabChat');
+    const tabScoreboard = document.getElementById('tabScoreboard');
+    const chatSection = document.getElementById('chatSection');
+    const scoreboardSection = document.getElementById('scoreboardSection');
+    tabChat.addEventListener('click', () => {
+      tabChat.classList.add('active');
+      tabScoreboard.classList.remove('active');
+      chatSection.classList.add('active');
+      scoreboardSection.classList.remove('active');
+    });
+    tabScoreboard.addEventListener('click', () => {
+      tabScoreboard.classList.add('active');
+      tabChat.classList.remove('active');
+      scoreboardSection.classList.add('active');
+      chatSection.classList.remove('active');
+    });
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuDropdown = document.getElementById('menu-dropdown');
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('open');
+      menuDropdown.classList.toggle('show');
+    });
+function closePopup() {
+    document.getElementById('supportPopup').style.display = 'none';
+  }
+
+  window.onload = () => {
+    setTimeout(() => {
+      document.getElementById('supportPopup').style.display = 'flex';
+    }, 800);
+  };
+  </script>
+</body>
+</html>
